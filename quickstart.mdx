@@ -17,7 +17,7 @@ You will build the same pipeline the AI Assistant example uses, from scratch: a 
 
 <Steps>
   <Step title="Create a new workflow">
-    Open `http://localhost:3000`, then click **File** in the top toolbar and choose **New Workflow**.
+    Open `http://localhost:5678`, then click **File** in the top toolbar and choose **New Workflow**.
     An empty canvas appears with the component palette on the left.
   </Step>
   <Step title="Switch the palette to Dev mode">
@@ -87,7 +87,7 @@ Now ask a question, then a follow-up — the agent remembers what you said.
   Prefer to call your workflow from other software? Replace the Chat Trigger with a **Webhook Trigger** (in **Utilities**) configured with path `hello`, keep the AI Agent and Console, and press **Start**. Then send a request from the terminal:
 
   ```bash
-  curl -X POST http://localhost:3010/webhook/hello -H "Content-Type: application/json" -d "{\"message\": \"Hello!\"}"
+  curl -X POST http://localhost:5678/webhook/hello -H "Content-Type: application/json" -d "{\"message\": \"Hello!\"}"
   ```
 
   The agent's reply prints in the **Console** tab, exactly like the chat version. To return the reply to the caller instead, add a **Webhook Response** node after the agent. See [Webhooks & HTTP](/nodes/webhooks).

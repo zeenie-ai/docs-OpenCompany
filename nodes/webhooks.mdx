@@ -138,7 +138,7 @@ Receive incoming HTTP requests at a dynamic endpoint.
 
 Your webhook will be available at:
 ```
-http://localhost:3010/webhook/{path}
+http://localhost:5678/webhook/{path}
 ```
 
 For production:
@@ -244,7 +244,7 @@ Create a simple API endpoint:
 
 **Test:**
 ```bash
-curl -X POST http://localhost:3010/webhook/api \
+curl -X POST http://localhost:5678/webhook/api \
   -H "Content-Type: application/json" \
   -d '{"action": "calculate", "value": 100}'
 ```
@@ -296,15 +296,15 @@ Wire a chat model node (OpenAI, Anthropic, Gemini, and more — see [AI Models](
 
 ```bash
 # GET request
-curl http://localhost:3010/webhook/test
+curl http://localhost:5678/webhook/test
 
 # POST with JSON
-curl -X POST http://localhost:3010/webhook/orders \
+curl -X POST http://localhost:5678/webhook/orders \
   -H "Content-Type: application/json" \
   -d '{"item": "Widget", "quantity": 5}'
 
 # With authentication
-curl -X POST http://localhost:3010/webhook/secure \
+curl -X POST http://localhost:5678/webhook/secure \
   -H "Authorization: Bearer your-token" \
   -d '{"data": "value"}'
 ```
@@ -312,7 +312,7 @@ curl -X POST http://localhost:3010/webhook/secure \
 ### Using HTTPie
 
 ```bash
-http POST localhost:3010/webhook/test item=Widget quantity:=5
+http POST localhost:5678/webhook/test item=Widget quantity:=5
 ```
 
 ### External Testing

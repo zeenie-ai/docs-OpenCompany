@@ -32,7 +32,7 @@
   <rect class="panel p-cyan" x="230" y="104" width="960" height="110" rx="10"/>
   <rect class="box p-cyan" x="500" y="118" width="420" height="82" rx="8"/>
   <text class="h2" x="710" y="144" text-anchor="middle">React Flow client</text>
-  <text class="sub" x="710" y="163" text-anchor="middle">client/ - Vite dev :3000</text>
+  <text class="sub" x="710" y="163" text-anchor="middle">client/ - Vite dev :5679</text>
   <text class="sub" x="710" y="181" text-anchor="middle">React 19 + Tailwind v4 + shadcn/ui + Zustand</text>
 
   <!-- Browser <-> Backend -->
@@ -49,7 +49,7 @@
   <!-- ===== Tier: Python backend ===== -->
   <text class="tier-label" x="230" y="310">PYTHON BACKEND</text>
   <rect class="panel p-purple" x="230" y="318" width="960" height="324" rx="10"/>
-  <text class="h1" x="710" y="348" text-anchor="middle">Python backend - FastAPI :3010 (server/)</text>
+  <text class="h1" x="710" y="348" text-anchor="middle">Python backend - FastAPI :5678 (server/)</text>
 
   <rect class="box p-purple" x="250" y="368" width="435" height="70" rx="8"/>
   <text class="h2" x="467" y="395" text-anchor="middle">WS + REST dispatch</text>
@@ -81,17 +81,17 @@
   <rect class="panel p-orange" x="230" y="726" width="960" height="120" rx="10"/>
 
   <rect class="box p-orange" x="250" y="746" width="215" height="80" rx="8"/>
-  <text class="h2" x="357" y="772" text-anchor="middle">Node.js executor :3020</text>
+  <text class="h2" x="357" y="772" text-anchor="middle">Node.js executor :5682</text>
   <text class="small" x="357" y="792" text-anchor="middle">Express + tsx</text>
   <text class="small" x="357" y="808" text-anchor="middle">JS/TS code nodes</text>
 
   <rect class="box p-orange" x="485" y="746" width="215" height="80" rx="8"/>
-  <text class="h2" x="592" y="772" text-anchor="middle">WhatsApp RPC :9400</text>
+  <text class="h2" x="592" y="772" text-anchor="middle">WhatsApp RPC :5683</text>
   <text class="small" x="592" y="792" text-anchor="middle">Go whatsmeow binary</text>
 
   <rect class="box p-orange" x="720" y="746" width="215" height="80" rx="8"/>
   <text class="h2" x="827" y="772" text-anchor="middle">Temporal server</text>
-  <text class="small" x="827" y="792" text-anchor="middle">gRPC :7233 - Web UI :8080</text>
+  <text class="small" x="827" y="792" text-anchor="middle">gRPC :5681 - Web UI :5680</text>
 
   <rect class="box p-orange" x="955" y="746" width="215" height="80" rx="8"/>
   <text class="h2" x="1062" y="772" text-anchor="middle">Temporal workers</text>

@@ -40,8 +40,9 @@ OpenCompany is three loosely-coupled tiers talking over a single persistent WebS
 |  Execution tier                                                        |
 |    Temporal workers (distributed)  or  local asyncio decide loop       |
 |    Redis (cache, locks, streams)   SQLite (workflow.db, credentials.db)|
-|    Node.js server (JS/TS code exec, port 3020)  WhatsApp RPC (9400)    |
-|    Android relay WebSocket         Temporal server (ports 7233/8080)   |
+|    Node.js executor (JS/TS, :5682, on demand)  WhatsApp RPC (:5683,    |
+|      optional, on demand)                                              |
+|    Android relay WebSocket         Temporal server (gRPC :5681, UI :5680)   |
 +------------------------------------------------------------------------+
                              |
                              v

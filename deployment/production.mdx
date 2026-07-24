@@ -21,7 +21,7 @@ Behind the scenes this runs two stages:
 2. **Terraform** - generates fresh secrets and owner credentials, packages your local build, then creates all resources: the VM (resource id `opencompany` for new deployments; pre-rebrand deployments keep `machinaos`, retained for upgrade compatibility), firewall rule, artifact bucket, and service account. A cloud-init startup script installs Node.js and uv, installs the package, and runs `company serve` under systemd on a single public port.
 
 <Info>
-`company serve` fronts the API, WebSocket, and the built single-page app plus the Node.js sidecar all on one port. No separate frontend container or reverse proxy is required for the standard path.
+`company serve` fronts the API, WebSocket, and the built single-page app on one port (optional daemons like the Node.js executor and WhatsApp are backend-managed and spawn on demand on their own loopback ports). No separate frontend container or reverse proxy is required for the standard path.
 </Info>
 
 ## Prerequisites
@@ -66,7 +66,7 @@ The generated login password is shown only once at the end of `deploy up`. Copy 
   VM size.
 </ParamField>
 
-<ParamField path="--port" type="number" default="8080">
+<ParamField path="--port" type="number" default="5678">
   Public port the app binds and the firewall opens.
 </ParamField>
 
@@ -126,7 +126,7 @@ Deployment state lives at `<user-data>/deploy/opencompany/` (pre-rebrand deploym
 
 ```bash
 # Check health endpoint (URL printed by deploy up / status)
-curl http://<external-ip>:8080/health
+curl http://<external-ip>:5678/health
 ```
 
 ## Security Checklist

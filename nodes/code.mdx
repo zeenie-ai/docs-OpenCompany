@@ -136,7 +136,7 @@ The list comprehension is the last expression, so it becomes `output`.
 
 ## JavaScript Executor
 
-Runs JavaScript on a persistent Node.js executor server that the backend starts alongside itself (default `http://localhost:3020`) -- no per-call process spawn. Assign your result to `output`; `console.log` and friends are captured as `console_output`.
+Runs JavaScript on a persistent Node.js executor server that the backend starts on demand at the first JS/TS node execution (default `http://localhost:5682`) -- no per-call process spawn. Assign your result to `output`; `console.log` and friends are captured as `console_output`.
 
 ### Parameters
 
@@ -169,7 +169,7 @@ output = {
 };
 ```
 
-If the executor server is not running, the node fails with a clear "executor not running on localhost:3020" error rather than hanging.
+If the executor server is not running, the node fails with a clear "executor unavailable at localhost:5682" error rather than hanging.
 
 ---
 

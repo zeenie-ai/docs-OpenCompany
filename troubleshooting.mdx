@@ -20,9 +20,8 @@ company start
 You should see:
 
 ```
-OpenCompany v0.0.94
-Frontend:  http://localhost:3000
-Backend:   http://localhost:3010
+OpenCompany v0.0.96
+App:       http://localhost:5678  (API + WebSocket + SPA)
 ```
 
 Still stuck? Run the built-in health check and read what it reports:
@@ -70,7 +69,7 @@ company doctor
 
 <AccordionGroup>
   <Accordion title="Port already in use">
-    A port is a numbered door another app may already hold open. OpenCompany uses: 3000 (the app in your browser), 3010 (backend), 3020 (code runner), 9400 (WhatsApp), 7233 and 8080 (Temporal engine).
+    A port is a numbered door another app may already hold open. OpenCompany uses one continuous non-standard block so collisions are rare: 5678 (the app), 5679 (the backend when running in dev mode, behind the app's proxy), 5680 and 5681 (Temporal engine: browser UI and gRPC), 5682 (code runner), 5683 (WhatsApp). The current numbers always live in the `.env` file inside the install folder.
 
     First try:
 
@@ -104,11 +103,11 @@ company doctor
 ## In-app problems
 
 <AccordionGroup>
-  <Accordion title="The page at localhost:3000 is blank">
+  <Accordion title="The page at localhost:5678 is blank">
     Hard-refresh the browser (Ctrl+Shift+R, or Cmd+Shift+R on macOS). If it stays blank, restart with `company stop` then `company start` and reload.
   </Accordion>
   <Accordion title="The app says it lost connection (WebSocket)">
-    The browser talks to the backend over a live connection. Check the backend is up by opening `http://localhost:3010/health` — you should see a short OK response. If not, restart with `company stop` then `company start`.
+    The browser talks to the backend over a live connection. Check the backend is up by opening `http://localhost:5678/health` — you should see a short OK response. If not, restart with `company stop` then `company start`.
   </Accordion>
   <Accordion title="Database is locked">
     Two copies of the backend are fighting over the same database file. Run `company stop`, wait a few seconds, and start again. If it persists, restart your computer — a stuck process is holding the file.

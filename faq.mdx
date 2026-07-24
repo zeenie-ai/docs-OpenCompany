@@ -62,12 +62,12 @@ Common questions and troubleshooting for OpenCompany.
     `company start` auto-installs any new dependencies before launching.
   </Accordion>
 
-  <Accordion title="Port 3000 is already in use">
-    Change the port in your `.env` file:
+  <Accordion title="A port is already in use">
+    Change the app port in your `.env` file:
     ```
-    VITE_CLIENT_PORT=3001
+    PYTHON_BACKEND_PORT=6678
     ```
-    Then restart the services. Default ports: client 3000, backend 3010, Node.js executor 3020, WhatsApp 9400, Temporal gRPC 7233 + UI 8080, Redis 6379.
+    Then restart the services. Default ports (one continuous block): app 5678 (always what you open in the browser), dev-mode backend 5679, Temporal UI 5680 + gRPC 5681, Node.js executor 5682, WhatsApp 5683, plus Redis 6379.
   </Accordion>
 </AccordionGroup>
 
@@ -217,7 +217,7 @@ Common questions and troubleshooting for OpenCompany.
 
 <AccordionGroup>
   <Accordion title="What's my webhook URL?">
-    Local: `http://localhost:3010/webhook/{path}`
+    Local: `http://localhost:5678/webhook/{path}`
     Production: `https://your-domain.com/webhook/{path}`
 
     Replace `{path}` with the path you set in the Webhook Trigger node.

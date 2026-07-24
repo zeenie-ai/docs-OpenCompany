@@ -67,13 +67,12 @@ Everything else — including the uv Python package manager — installs itself 
     You should see:
 
     ```
-    OpenCompany v0.0.94
-    Frontend:  http://localhost:3000
-    Backend:   http://localhost:3010
+    OpenCompany v0.0.96
+    App:       http://localhost:5678  (API + WebSocket + SPA)
     ```
   </Step>
   <Step title="Open it">
-    Go to [http://localhost:3000](http://localhost:3000) in your browser.
+    Go to [http://localhost:5678](http://localhost:5678) in your browser.
     The workflow canvas appears — no login needed — and the **Welcome Guide** walks you through the basics.
   </Step>
 </Steps>
@@ -98,7 +97,7 @@ curl -fsSL https://raw.githubusercontent.com/zeenie-ai/OpenCompany/main/install.
 ```
 </CodeGroup>
 
-When the script finishes, run `company start` and open `http://localhost:3000`.
+When the script finishes, run `company start` and open `http://localhost:5678`.
 
 <Accordion title="Windows note: slow first install or startup">
 Windows Defender scans every new Python file, which can make the first install or start slow. If it drags: open **Windows Security** → **Virus &amp; threat protection** → **Manage settings** → **Exclusions**, and add the `server\.venv` folder inside your OpenCompany install. A reboot after first install also helps.
@@ -126,7 +125,7 @@ OpenCompany creates its settings file (`.env`) automatically — you do not need
 
 <AccordionGroup>
   <Accordion title="Ports">
-    The app uses port 3000 (what you open in the browser) and 3010 (the backend). If another program owns one of them, edit the `.env` file inside the install folder and change `VITE_CLIENT_PORT` or `PYTHON_BACKEND_PORT`, then restart.
+    The app runs on a single port, 5678 (backend and browser UI together), with the other services on the ports right after it (5679-5683). If another program owns one, edit the `.env` file inside the install folder and change `PYTHON_BACKEND_PORT` (and friends), then restart.
   </Accordion>
   <Accordion title="Login screen">
     Local installs have no login (`VITE_AUTH_ENABLED=false` by default) — the app is only reachable from your own machine. Cloud deployments created with `company deploy` turn the login gate on automatically. To require a login locally, set `VITE_AUTH_ENABLED=true` in `.env` and restart.

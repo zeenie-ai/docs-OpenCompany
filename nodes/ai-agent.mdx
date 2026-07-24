@@ -353,7 +353,7 @@ When the AI Agent needs Android control:
 
 ### First Request
 ```bash
-curl -X POST http://localhost:3010/webhook/chat \
+curl -X POST http://localhost:5678/webhook/chat \
   -d '{"user_id": "user123", "message": "My name is Alex"}'
 ```
 
@@ -361,7 +361,7 @@ Response: "Nice to meet you, Alex! How can I help you today?"
 
 ### Second Request
 ```bash
-curl -X POST http://localhost:3010/webhook/chat \
+curl -X POST http://localhost:5678/webhook/chat \
   -d '{"user_id": "user123", "message": "What is my name?"}'
 ```
 

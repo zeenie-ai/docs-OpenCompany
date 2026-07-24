@@ -122,12 +122,12 @@ Be concise and friendly in your responses.
 
 ```bash
 # First message
-curl -X POST http://localhost:3010/webhook/chat \
+curl -X POST http://localhost:5678/webhook/chat \
   -H "Content-Type: application/json" \
   -d '{"message": "Hi, my name is Alex"}'
 
 # Second message (agent remembers your name)
-curl -X POST http://localhost:3010/webhook/chat \
+curl -X POST http://localhost:5678/webhook/chat \
   -H "Content-Type: application/json" \
   -d '{"message": "What is my name?"}'
 ```

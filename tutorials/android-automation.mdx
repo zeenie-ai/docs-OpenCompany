@@ -136,7 +136,7 @@ Package Name: {{webhookTrigger.body.app}}
 
 **Test:**
 ```bash
-curl -X POST http://localhost:3010/webhook/launch \
+curl -X POST http://localhost:5678/webhook/launch \
   -H "Content-Type: application/json" \
   -d '{"app": "com.spotify.music"}'
 ```
@@ -155,11 +155,11 @@ Action: {{webhookTrigger.body.action}}
 **Test:**
 ```bash
 # Enable WiFi
-curl -X POST http://localhost:3010/webhook/wifi \
+curl -X POST http://localhost:5678/webhook/wifi \
   -d '{"action": "enable"}'
 
 # Disable WiFi
-curl -X POST http://localhost:3010/webhook/wifi \
+curl -X POST http://localhost:5678/webhook/wifi \
   -d '{"action": "disable"}'
 ```
 
