@@ -135,7 +135,7 @@ OpenCompany creates its settings file (`.env`) automatically — you do not need
 ## For developers
 
 <Accordion title="Run from source (contributors)">
-  This path needs git and pnpm in addition to Node 22+ and Python 3.12+:
+  This path needs git and [bun](https://bun.sh) in addition to Node 22+ and Python 3.12+:
 
   ```bash
   git clone https://github.com/zeenie-ai/opencompany.git
@@ -146,18 +146,18 @@ OpenCompany creates its settings file (`.env`) automatically — you do not need
   ```
 
   ```bash
-  npm install -g pnpm
+  npm install -g bun
   ```
 
   ```bash
-  pnpm run build
+  bun run build
   ```
 
   ```bash
-  pnpm run dev
+  bun run dev
   ```
 
-  `pnpm run dev` starts the hot-reload dev stack (Vite + backend + workflow engine). The npm scripts are thin wrappers over the `company` CLI (`python -m cli dev`). The backend environment is managed by [uv](https://docs.astral.sh/uv/) against `server/uv.lock` — `pnpm run build` sets it up for you. Handy dev flags: `company dev --force` (re-bundle frontend dependencies) and `company dev --daemon` (expose the backend on your network).
+  `bun run dev` starts the hot-reload dev stack (Vite + backend + workflow engine). The package scripts are thin wrappers over the `company` CLI (`python -m cli dev`). The backend environment is managed by [uv](https://docs.astral.sh/uv/) against `server/uv.lock` — `bun run build` sets it up for you (including `bun install`). Handy dev flags: `company dev --force` (re-bundle frontend dependencies) and `company dev --daemon` (expose the backend on your network).
 </Accordion>
 
 ## If something went wrong
