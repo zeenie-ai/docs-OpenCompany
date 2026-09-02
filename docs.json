@@ -92,6 +92,7 @@
                   "nodes/email",
                   "nodes/messaging",
                   "nodes/whatsapp",
+                  "nodes/discord",
                   "nodes/stripe",
                   "nodes/android"
                 ]

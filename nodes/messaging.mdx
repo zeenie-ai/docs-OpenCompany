@@ -334,18 +334,18 @@ Expect up to `poll_interval` seconds of latency between a tweet being posted and
 
 ## Unified Social nodes
 
-The Social nodes decouple your workflow from any single platform. **Social Receive** sits after a platform trigger (WhatsApp Receive, Telegram Receive, Chat Trigger) and normalizes whatever arrives into one schema; **Social Send** takes one payload shape and routes it to the platform selected by its `channel` parameter. Build the middle of your workflow once against the unified schema, and swap the endpoints per platform.
+The Social nodes decouple your workflow from any single platform. **Social Receive** sits after a platform trigger (WhatsApp Receive, Telegram Receive, Discord Receive, Chat Trigger) and normalizes whatever arrives into one schema; **Social Send** takes one payload shape and routes it to the platform selected by its `channel` parameter. Build the middle of your workflow once against the unified schema, and swap the endpoints per platform.
 
 ### Social Send
 
-Platform-agnostic outbound messaging. The node advertises ten channels (`whatsapp`, `telegram`, `discord`, `slack`, `signal`, `sms`, `webchat`, `email`, `matrix`, `teams`), but only `whatsapp` is implemented today — other values return a "not yet implemented" error. Use **Telegram Send** for Telegram in the meantime.
+Platform-agnostic outbound messaging. The node advertises eleven channels (`whatsapp`, `whatsapp_business`, `telegram`, `discord`, `slack`, `signal`, `sms`, `webchat`, `email`, `matrix`, `teams`). Three are wired today — `whatsapp` (personal account), `whatsapp_business` (Meta Cloud API), and `discord` — and the rest return an error naming the platforms that are available. Use **Telegram Send** for Telegram in the meantime. Discord accepts `text` messages only through this node; use **Discord Send** for embeds and attachments.
 
 It exposes four input handles — message, media, contact, and metadata — matching the four output handles on Social Receive, and can also be wired to an AI Agent as a tool.
 
 #### Key parameters
 
 <ParamField path="channel" type="select" default="whatsapp">
-  Target platform. Only `whatsapp` is wired today.
+  Target platform. `whatsapp`, `whatsapp_business`, and `discord` are wired today.
 </ParamField>
 
 <ParamField path="recipient_type" type="select" default="phone">
@@ -380,7 +380,7 @@ Text messages take a `format` (`plain`, `markdown`, or `html`, default `plain`) 
 
 Normalizes messages from any connected platform trigger into a unified inbound schema, applies filters, and fans the result out across four output handles so downstream nodes grab just the slice they need.
 
-Connect a platform trigger (WhatsApp Receive, Telegram Receive, Chat Trigger) to Social Receive; it detects the source platform from the upstream node and normalizes automatically.
+Connect a platform trigger (WhatsApp Receive, Telegram Receive, Discord Receive, Chat Trigger) to Social Receive; it detects the source platform from the upstream node and normalizes automatically.
 
 #### Parameters
 

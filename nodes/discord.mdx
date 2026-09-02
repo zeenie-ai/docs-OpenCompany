@@ -1,0 +1,318 @@
+---
+title: Discord Nodes
+description: Discord bot messaging, server actions, message triggers, and slash commands
+---
+
+# Discord Nodes
+
+Send messages, manage servers, react to incoming messages, and handle slash commands through a Discord bot.
+
+## Available Nodes
+
+| Node | Type | Purpose |
+|------|------|---------|
+| Discord Send | Action / AI Tool | Send text, embeds, and a file attachment to a channel or user |
+| Discord API | Action / AI Tool | Servers, channels, messages, reactions, threads, attachment downloads |
+| Discord Receive | Trigger | Fire a workflow when a message arrives |
+| Discord Interaction | Trigger | Fire a workflow on a slash command or button click |
+
+<Info>
+Discord Send and Discord API are dual-purpose: they work as standalone workflow nodes **and** as AI Agent tools when connected to an agent's tools handle.
+</Info>
+
+## Setup Requirements
+
+1. Create an application in the [Discord Developer Portal](https://discord.com/developers/applications)
+2. Open **Bot** in the left sidebar and copy the token
+3. Under **Bot > Privileged Gateway Intents**, enable **Message Content Intent**
+4. Under **OAuth2 > URL Generator**, select the `bot` scope and the permissions you need, then open the generated URL to invite the bot to your server
+
+<Warning>
+**Enable the Message Content intent before connecting.** Without it the bot still connects normally, but every incoming message arrives with empty text and no error is reported anywhere. Discord only exempts messages that mention the bot directly or are sent in DMs. The credential check tells you whether the intent is enabled.
+</Warning>
+
+### Connecting
+
+There is no "connect" workflow node. The bot is managed from the Credentials panel:
+
+1. Open the **Credentials** modal and select the **Discord** panel
+2. Paste the bot token and validate it. A successful check shows the bot's username and whether the Message Content intent is on
+3. Click **Connect** to open the gateway connection that Discord Receive listens on
+
+Discord Send and Discord API work as soon as the token is saved. Only the triggers need the connection.
+
+### Finding IDs
+
+Discord addresses everything by numeric ID. Enable **Developer Mode** under **User Settings > Advanced**, then right-click any server, channel, user, or message and choose **Copy ID**.
+
+### Multiple bots
+
+Every Discord node has an **Account** dropdown. Leave it blank to use the bot saved in the Credentials panel. To run more than one bot, save additional tokens under separate accounts; each account keeps its own gateway connection and its own status.
+
+<Tip>
+An AI agent cannot change which bot a node acts as. The account is operator configuration, and it is removed from anything the model supplies. This matters because an incoming Discord message is the most likely source of a prompt injection.
+</Tip>
+
+---
+
+## Discord Send
+
+Post a message to a channel, or open a direct message with a user.
+
+### Parameters
+
+<ParamField path="target_type" type="select" default="channel">
+  `channel` posts in a channel; `user` opens a DM with a user
+</ParamField>
+
+<ParamField path="channel_id" type="string">
+  Channel ID. Shown when target type is `channel`
+</ParamField>
+
+<ParamField path="user_id" type="string">
+  User ID. Shown when target type is `user`. A DM channel is opened automatically
+</ParamField>
+
+<ParamField path="message" type="string">
+  Message text. Text longer than 2000 characters is split across several messages
+</ParamField>
+
+<ParamField path="embeds" type="array">
+  Up to 10 embed objects, in Discord's embed format
+</ParamField>
+
+<ParamField path="attachment" type="file">
+  A file from the workflow workspace to attach
+</ParamField>
+
+<ParamField path="reply_to_message_id" type="string">
+  Reply to an existing message by ID
+</ParamField>
+
+<ParamField path="suppress_embeds" type="boolean" default="false">
+  Hide link previews on this message
+</ParamField>
+
+<ParamField path="tts" type="boolean" default="false">
+  Send as a text-to-speech message
+</ParamField>
+
+### Output
+
+```json
+{
+  "message_id": "1234567890123456789",
+  "channel_id": "9876543210987654321",
+  "parts": 2,
+  "message_ids": ["1234567890123456789", "1234567890123456790"]
+}
+```
+
+`parts` and the full `message_ids` list appear only when the text was long enough to split. `message_id` is always the first message.
+
+---
+
+## Discord API
+
+The rest of the REST surface, selected by the **Operation** dropdown.
+
+| Operation | What it does |
+|-----------|--------------|
+| `list_guilds` | Servers the bot is a member of |
+| `list_channels` | Channels in a server |
+| `get_channel` | One channel's details |
+| `list_messages` | Recent messages in a channel |
+| `get_message` | One message |
+| `edit_message` | Replace a message's text |
+| `delete_message` | Delete a message |
+| `add_reaction` | React to a message with an emoji |
+| `pin_message` | Pin a message |
+| `create_thread` | Start a public thread from a channel |
+| `download_attachments` | Save files from an incoming message into the workspace |
+| `interaction_respond` | Answer a slash command or button click |
+| `execute_webhook` | Post through a Discord webhook URL, without a bot |
+| `custom` | Call any Discord API route |
+
+### Downloading attachments
+
+Discord Receive reports attachments as metadata only. To get the files, connect it to a Discord API node with the `download_attachments` operation and map the trigger's `attachments` output into the **Attachments** field. Each file is saved into the workflow workspace and returned as a reference the rest of the workflow can use.
+
+<Info>
+Discord's download links are signed and expire after a day, so download in the same workflow run that received the message rather than storing the link.
+</Info>
+
+### Webhooks
+
+`execute_webhook` posts through a Discord **webhook URL** (Server Settings > Integrations > Webhooks). No bot token is involved, so it can reach channels the bot is not in. The URL is the credential: keep it out of shared workflow exports.
+
+### Custom routes
+
+`custom` calls any path under Discord's API with the bot's token, for example `users/@me` or `channels/123/messages`. Only relative paths are accepted; a full URL or a path containing `..` is refused.
+
+---
+
+## Discord Receive
+
+Trigger node that fires when a message arrives in a server channel or a DM. Requires the bot to be **connected** from the Credentials panel.
+
+### Parameters
+
+<ParamField path="scope" type="select" default="all">
+  `all`, `guild` (server channels only), or `dm` (direct messages only)
+</ParamField>
+
+<ParamField path="guild_id" type="string">
+  Only fire for messages in this server
+</ParamField>
+
+<ParamField path="channel_id" type="string">
+  Only fire for messages in this channel
+</ParamField>
+
+<ParamField path="author_id" type="string">
+  Only fire for messages from this user
+</ParamField>
+
+<ParamField path="keywords" type="string">
+  Comma-separated words. Fires only if the message contains one of them
+</ParamField>
+
+<ParamField path="require_mention" type="boolean" default="false">
+  Only fire when the bot is mentioned. Works even without the Message Content intent
+</ParamField>
+
+<ParamField path="require_attachment" type="boolean" default="false">
+  Only fire for messages that include a file
+</ParamField>
+
+<ParamField path="ignore_bots" type="boolean" default="true">
+  Ignore messages from other bots. Turning this off can create a loop between two bots replying to each other
+</ParamField>
+
+### Output
+
+```json
+{
+  "message_id": "1234567890123456789",
+  "channel_id": "9876543210987654321",
+  "channel_name": "general",
+  "guild_id": "1111111111111111111",
+  "guild_name": "My Server",
+  "is_dm": false,
+  "author_id": "2222222222222222222",
+  "author_name": "alice",
+  "author_display_name": "Alice",
+  "author_is_bot": false,
+  "content": "hello there",
+  "timestamp": "2026-08-14T10:00:00+00:00",
+  "attachments": [
+    {
+      "id": "3333333333333333333",
+      "filename": "photo.png",
+      "size": 48213,
+      "url": "https://cdn.discordapp.com/attachments/...",
+      "content_type": "image/png",
+      "width": 800,
+      "height": 600
+    }
+  ],
+  "has_attachments": true,
+  "mentions_me": false,
+  "reply_to_message_id": null
+}
+```
+
+All IDs are strings. `guild_id` is `null` for a direct message. The bot's own messages never fire the trigger.
+
+---
+
+## Discord Interaction
+
+Trigger node that fires on a slash command, button click, select menu, or modal submit. Interactions arrive over HTTP rather than the gateway, so this needs extra setup.
+
+### Setup
+
+1. In the Developer Portal, under **General Information**, copy the **Public Key** and paste it into the Discord credential's **Public Key** field
+2. Set the application's **Interactions Endpoint URL** to `https://<your-server>/api/discord/interactions`. Discord tests the URL when you save it; the server must be reachable from the internet
+3. Register your slash commands with Discord (the Developer Portal or the API)
+
+<Warning>
+Setting an Interactions Endpoint URL changes where Discord delivers **all** interactions for that application. They arrive at the URL and stop arriving over the gateway. This is a per-application setting on Discord's side.
+</Warning>
+
+For a second bot account, use `https://<your-server>/api/discord/interactions/<account-id>`.
+
+### Parameters
+
+<ParamField path="interaction_kind" type="select" default="all">
+  `all`, `command` (slash commands), `component` (buttons and menus), or `modal`
+</ParamField>
+
+<ParamField path="command_name" type="string">
+  Only fire for this slash command. A leading `/` is fine
+</ParamField>
+
+<ParamField path="custom_id" type="string">
+  Only fire for the button, menu, or modal with this custom ID
+</ParamField>
+
+<ParamField path="guild_id" type="string">
+  Only fire for interactions in this server
+</ParamField>
+
+### Output
+
+```json
+{
+  "interaction_id": "4444444444444444444",
+  "interaction_type": 2,
+  "command_name": "ping",
+  "custom_id": null,
+  "options": { "target": "world" },
+  "channel_id": "9876543210987654321",
+  "guild_id": "1111111111111111111",
+  "user_id": "2222222222222222222",
+  "user_name": "alice",
+  "interaction_ref": "k3Jd8...opaque"
+}
+```
+
+`options` contains the slash command's arguments by name. `interaction_type` is `2` for a command, `3` for a component, `5` for a modal.
+
+### Replying to an interaction
+
+Discord requires an acknowledgement within three seconds, so the trigger sends one immediately and the workflow replies afterwards. Connect a **Discord API** node with the `interaction_respond` operation, map the trigger's `interaction_ref` into its **Interaction reference** field, and set the reply text. The reply must be sent within 15 minutes of the interaction.
+
+<Info>
+`interaction_ref` is an opaque handle, not Discord's interaction token. The token can post messages as your app, so it never appears in workflow output. References are held in memory and do not survive a server restart.
+</Info>
+
+---
+
+## User authorization (OAuth2)
+
+To act on behalf of a Discord user rather than the bot, fill in the credential's **OAuth2 Client ID** and **Client Secret** (Developer Portal > OAuth2), add `https://<your-server>/api/discord/callback` as a redirect URI there, then use **Connect** on the user panel. Only the `identify` and `guilds` scopes are requested.
+
+---
+
+## Troubleshooting
+
+<Accordion title="Incoming messages have empty text">
+  The Message Content intent is not enabled. Turn it on under **Bot > Privileged Gateway Intents** in the Developer Portal, then reconnect. Messages that mention the bot, and all DMs, carry text regardless.
+</Accordion>
+
+<Accordion title="Discord Receive works when I click Run but not after deploying">
+  Connect the bot from the Credentials panel before deploying. A deployed trigger listens on the gateway connection, and refuses to arm if there is none.
+</Accordion>
+
+<Accordion title="Discord will not save my Interactions Endpoint URL">
+  Discord verifies the URL by sending a test request that must be rejected with a signature error. Check that the **Public Key** in the credential matches the application, and that the server is reachable from the internet over HTTPS.
+</Accordion>
+
+<Accordion title="Sends fail with a rate limit error">
+  Discord limits each bot to 50 requests per second, and separately blocks hosts that send too many invalid requests. Short waits are handled automatically. A long block usually means a wrong token or a channel the bot cannot see; fix the underlying error rather than retrying.
+</Accordion>
+
+<Accordion title="The bot cannot see a channel or send to it">
+  Check the bot's role and the channel's permission overrides in Discord. The bot needs **View Channel** and **Send Messages** at minimum, and **Attach Files** to send attachments.
+</Accordion>
