@@ -129,7 +129,12 @@
     "primary": {
       "type": "button",
       "label": "Get Started",
-      "href": "https://docs.zeenie.xyz/installation"
+      "href": "/installation"
+    }
+  },
+  "integrations": {
+    "ga4": {
+      "measurementId": "G-00RXW9857H"
     }
   },
   "footerSocials": {
