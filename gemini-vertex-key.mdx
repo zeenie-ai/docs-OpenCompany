@@ -1,0 +1,84 @@
+---
+title: "Gemini through Vertex AI"
+description: "Bill Gemini usage to your Google Cloud project instead of AI Studio's prepaid credits, with one script"
+---
+
+<Info>
+This is optional. An AI Studio key from [aistudio.google.com/apikey](https://aistudio.google.com/apikey) works fine for trying OpenCompany. Use this page when you want Gemini usage on your Google Cloud bill: trial credits, committed spend, one invoice, and the paid-tier data terms.
+</Info>
+
+## Two kinds of Gemini key
+
+OpenCompany's Gemini provider accepts both, and tells them apart by prefix.
+
+| Key | Prefix | Runs on | Billed to |
+|---|---|---|---|
+| AI Studio key | `AIza` | Gemini Developer API | AI Studio. Free tier without billing; a **prepaid** tier once your project has billing. Google Cloud credits never apply. |
+| Vertex AI key | `AQ.` | Vertex AI in your project | Your Google Cloud project, like any Cloud service. Trial and promotional credits apply. Prompts are not used to improve Google products. |
+
+With an `AQ.` key the model list shows Vertex-supported versions only (no `-latest` aliases). Re-validate the provider after switching key types so the list refreshes.
+
+## What you need
+
+- The [gcloud CLI](https://cloud.google.com/sdk/docs/install), logged in: `gcloud auth login`
+- A Google Cloud project with **billing enabled**
+- That project must be **inside an organisation** (a Google Workspace or Cloud Identity domain). A default policy blocks the kind of key Vertex needs, and only an organisation can relax it. A personal project created outside any organisation cannot be used; create one under your domain instead.
+
+## Create the key
+
+Run the script from the OpenCompany repository. It enables the APIs, relaxes the policy for this one project, creates a service account with the Vertex AI User role, creates a key bound to it and restricted to Vertex AI, and proves the key works with one Gemini request.
+
+```bash
+scripts/gemini-vertex-key.sh --project YOUR_PROJECT_ID
+```
+
+If you have several gcloud accounts, pick the one that owns the project:
+
+```bash
+scripts/gemini-vertex-key.sh --project YOUR_PROJECT_ID --account you@yourdomain.com
+```
+
+Re-running is safe; every step reuses what already exists. The script does not print the key. It ends with the one command that does, so the key goes from your terminal into OpenCompany and nowhere else:
+
+```bash
+gcloud services api-keys get-key-string projects/.../keys/... --format='value(keyString)'
+```
+
+## Add it to OpenCompany
+
+<Steps>
+  <Step title="Open API Credentials">
+    In OpenCompany, click the key icon in the top toolbar.
+  </Step>
+  <Step title="Choose Gemini">
+    Under **AI Providers**, click **Gemini**.
+  </Step>
+  <Step title="Paste and validate">
+    Paste the `AQ.` key and click **Validate**. The badge turns green and the model list switches to Vertex-supported models.
+  </Step>
+</Steps>
+
+## If something is refused
+
+<AccordionGroup>
+  <Accordion title="project ... is not inside an organisation">
+    The managed policy `iam.managed.disableServiceAccountApiKeyCreation` cannot be overridden on a project that has no organisation. Create a project under your Workspace or Cloud Identity organisation, or move this one there with `gcloud projects move PROJECT --organization ORG_ID`, then re-run. Moving a project into an organisation is permanent.
+  </Accordion>
+  <Accordion title="could not set the policy">
+    Relaxing the policy needs the **Organization Policy Administrator** role on the organisation. The script tries to grant it to you if you are an Organization Administrator; otherwise it prints the exact command for whoever is.
+  </Accordion>
+  <Accordion title="policy not propagated yet">
+    Normal. A freshly set policy takes about a minute to reach the API Keys service; the script waits and retries.
+  </Accordion>
+  <Accordion title="Vertex rejected the request">
+    Almost always billing. Vertex AI needs billing enabled on the project. Check with `gcloud billing projects describe PROJECT`.
+  </Accordion>
+</AccordionGroup>
+
+## Rotate or remove
+
+```bash
+scripts/gemini-vertex-key.sh --project YOUR_PROJECT_ID --revoke
+```
+
+deletes the key and keeps the service account; run the script again to issue a fresh one. Delete the pasted key in OpenCompany's credentials modal at the same time.

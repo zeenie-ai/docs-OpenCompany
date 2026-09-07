@@ -29,7 +29,7 @@
           {
             "group": "Set it up",
             "icon": "download",
-            "pages": ["installation", "add-api-keys", "first-chat"]
+            "pages": ["installation", "add-api-keys", "gemini-vertex-key", "first-chat"]
           },
           {
             "group": "Build your first workflow",
