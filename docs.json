@@ -122,6 +122,10 @@
   "navbar": {
     "links": [
       {
+        "label": "Pricing",
+        "href": "https://opencompany.sh/pricing/"
+      },
+      {
         "label": "GitHub",
         "href": "https://github.com/zeenie-ai/opencompany"
       }
